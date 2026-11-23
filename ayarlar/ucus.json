@@ -1,0 +1,172 @@
+{
+  "_not": "Uçuş, güvenlik, senkron ve manevra parametreleri. Her değerin yanında birim, açıklama ve kaynak etiketi ([Ş]/[K]/[Y]) bulunur.",
+
+  "setpoint_frekansi_hz": {
+    "deger": 20.0,
+    "birim": "Hz",
+    "aciklama": "PX4 offboard setpoint gönderim sıklığı (kesintisiz akış için >= 2 Hz şart, 20 Hz yumuşak kontrol sağlar)",
+    "kaynak": "[Y]"
+  },
+  "baslangic_offboard_paket_sayisi": {
+    "deger": 15,
+    "birim": "adet",
+    "aciklama": "Offboard moduna geçmeden önce gönderilecek başlangıç setpoint sayısı",
+    "kaynak": "[Y]"
+  },
+  "kalkis_irtifasi_m": {
+    "deger": 15.0,
+    "birim": "m",
+    "aciklama": "Kalkış sonrası ilk tutunma irtifası (şartname örneği 15 m, alt sınır 10 m)",
+    "kaynak": "[Y]"
+  },
+  "maks_irtifa_m": {
+    "deger": 35.0,
+    "birim": "m",
+    "aciklama": "Güvenlik tavan irtifası (sürü istenen irtifayı aşmamalı [5.4])",
+    "kaynak": "[Y]"
+  },
+  "varsayilan_formasyon": {
+    "deger": "ok_basi",
+    "birim": "ad",
+    "aciklama": "Başlangıç formasyon tipi",
+    "kaynak": "[Y]"
+  },
+  "varsayilan_aralik_m": {
+    "deger": 5.0,
+    "birim": "m",
+    "aciklama": "Başlangıçta ajanlar arası mesafe (şartname örneği 5 m)",
+    "kaynak": "[Y]"
+  },
+  "maks_yatay_hiz_m_s": {
+    "deger": 3.0,
+    "birim": "m/s",
+    "aciklama": "Yatay hedef rampalama hız sınırı (osilasyonu önlemek için yumuşak profil)",
+    "kaynak": "[Y]"
+  },
+  "maks_dusey_hiz_m_s": {
+    "deger": 1.5,
+    "birim": "m/s",
+    "aciklama": "Düşey hedef rampalama hız sınırı",
+    "kaynak": "[Y]"
+  },
+  "maks_yaw_hizi_deg_s": {
+    "deger": 30.0,
+    "birim": "derece/s",
+    "aciklama": "Formasyon rotasyonu maksimum dönüş hızı",
+    "kaynak": "[Y]"
+  },
+  "konum_varis_toleransi_m": {
+    "deger": 0.6,
+    "birim": "m",
+    "aciklama": "Bir dronun kendi slot hedefine varmış sayılacağı 3B mesafe eşiği",
+    "kaynak": "[Y]"
+  },
+  "yaw_varis_toleransi_deg": {
+    "deger": 6.0,
+    "birim": "derece",
+    "aciklama": "Formasyon rotasyonunda yönelim varmış sayılma eşiği",
+    "kaynak": "[Y]"
+  },
+  "carpismadan_kacinma_mesafesi_m": {
+    "deger": 2.5,
+    "birim": "m",
+    "aciklama": "İki dron arası mesafe bunun altına düşerse yatay itme devreye girer",
+    "kaynak": "[Y]"
+  },
+  "kritik_carpisma_mesafesi_m": {
+    "deger": 1.5,
+    "birim": "m",
+    "aciklama": "Acil kaçınma eşiği; maksimum itme uygulanır",
+    "kaynak": "[Y]"
+  },
+  "kacinma_itme_kazanci": {
+    "deger": 1.2,
+    "birim": "1/s",
+    "aciklama": "Çarpışma önleme yatay itme katsayısı",
+    "kaynak": "[Y]"
+  },
+  "gecis_irtifa_katmani_m": {
+    "deger": 1.2,
+    "birim": "m",
+    "aciklama": "Formasyon değişimi sırasında slot bazlı geçici irtifa ayrımı (çarpışma önleme)",
+    "kaynak": "[Y]"
+  },
+  "maks_egim_acisi_deg": {
+    "deger": 25.0,
+    "birim": "derece",
+    "aciklama": "Sürü pitch/roll manevra açısı güvenlik sınırı",
+    "kaynak": "[Y]"
+  },
+  "durum_yayin_araligi_s": {
+    "deger": 0.1,
+    "birim": "s",
+    "aciklama": "Dronlar arası UDP durum (heartbeat) yayın aralığı (10 Hz)",
+    "kaynak": "[Y]"
+  },
+  "komsu_zaman_asimi_s": {
+    "deger": 2.5,
+    "birim": "s",
+    "aciklama": "Bu süre boyunca mesaj alınmayan komşu kayıp sayılır, sürü kilitlenmez",
+    "kaynak": "[Y]"
+  },
+  "adim_zaman_asimi_s": {
+    "deger": 45.0,
+    "birim": "s",
+    "aciklama": "Senkron adımda maksimum bekleme süresi (kilitlenme önleme)",
+    "kaynak": "[Y]"
+  },
+  "varsayilan_gorev_bekleme_s": {
+    "deger": 4.0,
+    "birim": "s",
+    "aciklama": "QR içinde 'w' verilmezse görevler arası bekleme süresi",
+    "kaynak": "[Y]"
+  },
+  "ayrilma_yerde_bekleme_s": {
+    "deger": 3.0,
+    "birim": "s",
+    "aciklama": "Renkli alana inip disarm olan dronun tekrar kalkmadan önce bekleme süresi",
+    "kaynak": "[Y]"
+  },
+  "gps_tutarlilik_esigi_m": {
+    "deger": 3.0,
+    "birim": "m",
+    "aciklama": "Formasyonda beklerken GPS mesafesi ile beklenen formasyon mesafesi farkı uyarı eşiği",
+    "kaynak": "[Y]"
+  },
+  "gorev2_hareket_hizi_m_s": {
+    "deger": 2.5,
+    "birim": "m/s",
+    "aciklama": "Görev 2 Sürü Hareket Modu tam çubuk yatay hızı",
+    "kaynak": "[Y]"
+  },
+  "gorev2_irtifa_hizi_m_s": {
+    "deger": 1.2,
+    "birim": "m/s",
+    "aciklama": "Görev 2 throttle irtifa değişim hızı",
+    "kaynak": "[Y]"
+  },
+  "gorev2_yaw_hizi_deg_s": {
+    "deger": 25.0,
+    "birim": "derece/s",
+    "aciklama": "Görev 2 yaw dönüş hızı",
+    "kaynak": "[Y]"
+  },
+  "gorev2_egim_hizi_deg_s": {
+    "deger": 12.0,
+    "birim": "derece/s",
+    "aciklama": "Görev 2 Manevra Modu pitch/roll eğim değişim hızı",
+    "kaynak": "[Y]"
+  },
+  "gorev2_kumanda_zaman_asimi_s": {
+    "deger": 0.6,
+    "birim": "s",
+    "aciklama": "Görev 2 kumanda paketi gelmezse hız girdileri sıfırlanır (sürü havada sabit kalır)",
+    "kaynak": "[Y]"
+  },
+  "inis_algilama_hiz_esigi_m_s": {
+    "deger": 0.15,
+    "birim": "m/s",
+    "aciklama": "İniş tamamlandı kontrolü için düşey hız eşiği",
+    "kaynak": "[Y]"
+  }
+}

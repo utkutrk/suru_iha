@@ -1,0 +1,70 @@
+{
+  "_not": "Ağ, MAVSDK/PX4 port eşlemesi ve mesaj güvenlik ayarları. Gizli takım anahtarı bu dosyaya düz yazılmaz; ortam değişkeninden veya *.local.json'dan okunur.",
+
+  "protokol_surumu": {
+    "deger": 1,
+    "birim": "sürüm",
+    "aciklama": "Dronlar arası JSON mesaj protokol sürümü",
+    "kaynak": "[Y]"
+  },
+  "maks_mesaj_yasi_s": {
+    "deger": 2.0,
+    "birim": "s",
+    "aciklama": "Zaman damgası bundan eski (bayat) veya ileri olan paketler yok sayılır",
+    "kaynak": "[Y]"
+  },
+  "takim_anahtari_env": {
+    "deger": "SURU_TAKIM_ANAHTARI",
+    "birim": "env",
+    "aciklama": "Takım doğrulama anahtarının okunacağı ortam değişkeni adı",
+    "kaynak": "[Y]"
+  },
+  "yerel_gizli_dosya": {
+    "deger": "ayarlar/gizli.local.json",
+    "birim": "yol",
+    "aciklama": "Git'e girmeyen yerel geliştirme anahtarı dosyası",
+    "kaynak": "[Y]"
+  },
+  "dinleme_adresi": {
+    "deger": "127.0.0.1",
+    "birim": "IP",
+    "aciklama": "Simülasyonda UDP dinleme adresi (sahada 0.0.0.0 yapılır)",
+    "kaynak": "[Y]"
+  },
+  "hedef_adresi": {
+    "deger": "127.0.0.1",
+    "birim": "IP",
+    "aciklama": "Simülasyonda komşulara gönderim adresi (sahada alt ağ veya telsiz IP)",
+    "kaynak": "[Y]"
+  },
+  "udp_taban_portu": {
+    "deger": 15000,
+    "birim": "port",
+    "aciklama": "İHA k için UDP portu = udp_taban_portu + k (İHA 1 -> 15001, İHA 2 -> 15002, İHA 3 -> 15003)",
+    "kaynak": "[Y]"
+  },
+  "mavlink_taban_portu": {
+    "deger": 14540,
+    "birim": "port",
+    "aciklama": "PX4 SITL offboard MAVLink UDP portu = mavlink_taban_portu + (iha_id - 1)",
+    "kaynak": "[K]"
+  },
+  "mavsdk_sunucu_taban_portu": {
+    "deger": 50050,
+    "birim": "port",
+    "aciklama": "Her dronun ayrı mavsdk_server gRPC portu = mavsdk_sunucu_taban_portu + iha_id",
+    "kaynak": "[K]"
+  },
+  "varsayilan_iha_sayisi": {
+    "deger": 3,
+    "birim": "adet",
+    "aciklama": "Varsayılan sürü büyüklüğü (komut satırından --iha-sayisi ile değiştirilebilir)",
+    "kaynak": "[Ş]"
+  },
+  "takim_id": {
+    "deger": "1",
+    "birim": "id",
+    "aciklama": "QR kodundaki takım kimliği (hakem brifinginde verilir)",
+    "kaynak": "[Y]"
+  }
+}

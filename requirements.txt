@@ -1,0 +1,7 @@
+# Sabitlenmiş paket sürümleri (MAVSDK ana sürüm değişikliklerinden korunmak için)
+mavsdk==3.17.4
+numpy==2.2.6
+opencv-python-headless==5.1.0.95
+pytest==9.2.0
+qrcode==8.2
+pillow==12.3.0

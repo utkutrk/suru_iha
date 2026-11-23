@@ -1,0 +1,21 @@
+{
+  "_not": "Yalnız şartnamede açıkça yazan sayılar. Her değerin yanında madde var. Takımın kendi seçimleri ucus.json'a gider, buraya girmez.",
+  "_kaynak": "Sürü İHA Yarışma Şartnamesi V1.2 (15.06.2026)",
+
+  "min_iha_sayisi":        { "deger": 3,    "birim": "adet", "madde": "5 ve 6.1: tüm görevlerde en az 3 İHA" },
+  "min_irtifa_m":          { "deger": 10,   "birim": "m",    "madde": "5.1 Görev Kuralları: alt irtifa sınırı 10 m, altına inmek yasak" },
+  "maks_kutle_kg":         { "deger": 10,   "birim": "kg",   "madde": "6.1: İHA 10 kg'dan ağır olamaz" },
+  "kamera_maks_fov_deg":   { "deger": 90,   "birim": "derece","madde": "5.1 Kamera Kullanımı: FOV 90° geçemez" },
+  "qr_boyut_m":            { "deger": 1.5,  "birim": "m",    "madde": "5.1 QR Kod Özellikleri: 150 x 150 cm" },
+  "renkli_alan_yaricap_m": { "deger": 1.0,  "birim": "m",    "madde": "5.1: renkli iniş alanı 100 cm yarıçaplı daire" },
+  "inis_tolerans_m":       { "deger": 2.5,  "birim": "m",    "madde": "5.1: alan merkezinden 2.5 m yarıçap içine iniş" },
+  "rc_kopma_bekleme_s":    { "deger": 5,    "birim": "s",    "madde": "5.4: kumanda kopunca 5 sn sonra failsafe" },
+  "rc_kopma_eylem":        { "deger": "land", "madde": "5.4: failsafe davranışı Land olmalı" },
+  "odul_min_puan":         { "deger": 200,  "birim": "puan", "madde": "12.1: ödül için en az 200 puan ve iki görevden de puan" },
+
+  "formasyon_tipleri":     { "deger": ["ok_basi", "v", "cizgi"], "madde": "Şekil 3 ve 5.2 hakem direktifleri" },
+  "gorev1_komutlari":      { "deger": ["formasyon", "manevra_pitch_roll", "irtifa", "birey_cikar_ekle", "sonraki_qr"], "madde": "5.1.2 QR komutları" },
+  "renk_alanlari":         { "deger": ["kirmizi", "mavi"], "madde": "5.1.2" },
+  "yki_gorev_sirasinda":   { "deger": "yalnizca_baslat", "madde": "5.1 Görev Kuralları: başlatma dışında müdahale yasak; hakem bağlantıyı kesebilir" },
+  "algoritma_tipi":        { "deger": "dagitik", "madde": "5.3: merkezi algoritma eksik puan" }
+}

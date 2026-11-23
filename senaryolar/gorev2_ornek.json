@@ -1,0 +1,18 @@
+{
+  "_not": "Görev 2 örnek hakem direktifleri (Şartname 5.2.2). Otomatik prova veya kumanda doğrulaması için kullanılır.",
+  "adimlar": [
+    { "komut": "kalkis", "sure_s": 8.0 },
+    { "komut": "formasyon", "deger": "ok_basi", "sure_s": 5.0 },
+    { "komut": "mod", "deger": "hareket", "sure_s": 1.0 },
+    { "komut": "hareket", "ileri": 0.8, "sag": 0.0, "yukari": 0.0, "yaw": 0.0, "sure_s": 5.0 },
+    { "komut": "formasyon", "deger": "cizgi", "sure_s": 5.0 },
+    { "komut": "hareket", "ileri": 0.0, "sag": 0.8, "yukari": 0.0, "yaw": 0.0, "sure_s": 4.0 },
+    { "komut": "hareket", "ileri": 0.6, "sag": 0.6, "yukari": 0.0, "yaw": 0.0, "sure_s": 4.0 },
+    { "komut": "hareket", "ileri": 0.0, "sag": 0.0, "yukari": 0.0, "yaw": 0.7, "sure_s": 4.0 },
+    { "komut": "formasyon", "deger": "v", "sure_s": 5.0 },
+    { "komut": "mod", "deger": "manevra", "sure_s": 1.0 },
+    { "komut": "hareket", "ileri": -0.7, "sag": 0.0, "yukari": 0.0, "yaw": -0.5, "sure_s": 4.0 },
+    { "komut": "hareket", "ileri": 0.0, "sag": -0.7, "yukari": 0.5, "yaw": 0.0, "sure_s": 4.0 },
+    { "komut": "inis", "sure_s": 10.0 }
+  ]
+}

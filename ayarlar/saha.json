@@ -1,0 +1,90 @@
+{
+  "_not": "Saha / Gazebo simülasyon alanı koordinatları, geofence ve kamera/renk ayarları. Tüm konumlar ortak NED (Kuzey, Doğu, Aşağı) sistemindedir.",
+
+  "ortak_orijin_gps": {
+    "deger": {
+      "enlem": 47.397971057728974,
+      "boylam": 8.546163739800146,
+      "irtifa_m": 488.0
+    },
+    "birim": "derece/m",
+    "aciklama": "PX4 Gazebo varsayılan dünya orijini (sahada hakem noktasına güncellenir)",
+    "kaynak": "[K]"
+  },
+  "alan_sinirlari_ned": {
+    "deger": {
+      "min_kuzey_m": -60.0,
+      "maks_kuzey_m": 120.0,
+      "min_dogu_m": -60.0,
+      "maks_dogu_m": 120.0
+    },
+    "birim": "m",
+    "aciklama": "Uçuş alanı yatay güvenlik sınırı (geofence)",
+    "kaynak": "[Y]"
+  },
+  "home_merkezi_ned": {
+    "deger": [0.0, 0.0, 0.0],
+    "birim": "m",
+    "aciklama": "Sürünün başlangıç (Home) merkez noktası [Kuzey, Doğu, Aşağı]",
+    "kaynak": "[Y]"
+  },
+  "baslangic_konumlari_ned": {
+    "deger": {
+      "1": [2.5, 0.0, 0.0],
+      "2": [-2.5, -2.5, 0.0],
+      "3": [-2.5, 2.5, 0.0],
+      "4": [-7.5, -5.0, 0.0],
+      "5": [-7.5, 5.0, 0.0]
+    },
+    "birim": "m",
+    "aciklama": "Gazebo spawn başlangıç konumları (İHA ID -> [Kuzey, Doğu, Aşağı])",
+    "kaynak": "[Y]"
+  },
+  "qr_konumlari_ned": {
+    "deger": {
+      "1": [20.0, -20.0, 0.0],
+      "2": [60.0, -20.0, 0.0],
+      "3": [75.0, 0.0, 0.0],
+      "4": [60.0, 20.0, 0.0],
+      "5": [20.0, 20.0, 0.0]
+    },
+    "birim": "m",
+    "aciklama": "Şartname Şekil 1 düzenine uygun QR1-QR5 konumları [Kuzey, Doğu, Aşağı] (sahada yeniden kaydedilebilir [5.1])",
+    "kaynak": "[Y]"
+  },
+  "simulasyon_renkli_alanlar_ned": {
+    "deger": {
+      "kirmizi": [40.0, 0.0, 0.0],
+      "mavi": [48.0, 5.0, 0.0]
+    },
+    "birim": "m",
+    "aciklama": "Gazebo dünyasındaki renkli alan konumları (gerçek uçuşta kamerayla rota üzerinde keşfedilir)",
+    "kaynak": "[Y]"
+  },
+  "kamera": {
+    "deger": {
+      "fov_deg": 78.0,
+      "genislik_px": 1280,
+      "yukseklik_px": 720,
+      "ardisik_tespit_kare": 3,
+      "min_kontur_alani_px": 400
+    },
+    "birim": "derece/px",
+    "aciklama": "Kamera görüş açısı (<= 90° [Ş]) ve renk tespiti parametreleri",
+    "kaynak": "[Y]"
+  },
+  "renk_hsv_araliklari": {
+    "deger": {
+      "kirmizi": [
+        [[0, 110, 80], [10, 255, 255]],
+        [[170, 110, 80], [180, 255, 255]]
+      ],
+      "mavi": [
+        [[100, 110, 80], [130, 255, 255]]
+      ]
+    },
+    "birim": "HSV",
+    "aciklama": "Renkli iniş alanı tespiti için HSV aralıkları (kırmızı iki aralıkta)",
+    "kaynak": "[Y]"
+  }
+}

@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+kayitlar/*
+!kayitlar/.gitkeep
+*.local.json
