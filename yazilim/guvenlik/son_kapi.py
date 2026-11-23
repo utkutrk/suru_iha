@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import math
+import time
 import numpy as np
 
 from yazilim.ortak.ayarlar import Ayarlar
@@ -28,6 +29,9 @@ class GuvenlikKapisi:
         self._itme_kazanci = float(ayarlar.ucus["kacinma_itme_kazanci"])
         self._gecis_katmani = float(ayarlar.ucus["gecis_irtifa_katmani_m"])
         self._gps_tutarlilik_esigi = float(ayarlar.ucus["gps_tutarlilik_esigi_m"])
+        self._kritik_log_araligi = float(ayarlar.ucus["kritik_log_araligi_s"])
+        # Aynı komşu için uyarıyı her döngüde değil, belirli aralıkla yazmak için son log zamanı
+        self._son_kritik_log_s: dict[int, float] = {}
 
         sinir = ayarlar.saha["alan_sinirlari_ned"]
         self._min_kuzey = float(sinir["min_kuzey_m"])
@@ -146,9 +150,12 @@ class GuvenlikKapisi:
             siddet = (self._kacinma_mesafesi - mesafe_3b) * self._itme_kazanci
             if mesafe_3b < self._kritik_mesafe:
                 siddet *= 2.0
-                self._logger.warning(
-                    "Kritik yakınlık! İHA-%d ile mesafe=%.2f m", komsu_id, mesafe_3b
-                )
+                simdi = time.monotonic()
+                if simdi - self._son_kritik_log_s.get(komsu_id, -1e9) >= self._kritik_log_araligi:
+                    self._son_kritik_log_s[komsu_id] = simdi
+                    self._logger.warning(
+                        "Kritik yakınlık! İHA-%d ile mesafe=%.2f m", komsu_id, mesafe_3b
+                    )
             toplam_itme += yon * siddet
         return toplam_itme
 

@@ -12,7 +12,8 @@ Bağlayıcı değil; iç düzeni kodlama ajanı değiştirebilir. Ortak ilke: **
 | suru | Sürünün beyni: `formasyonlar` (tek dosya: ok_basi, v, cizgi), `komutlar` (tek dosya: formasyon_kur, ayril, irtifa...), sanal yapı ve slot hedefi hesabı, adım adım senkron | MAVSDK, kamera, QR |
 | gorus | Kamera arayüzü (sim ve gerçek aynı arayüz), renkli alan bulma; QR okuma sonra | uçuş kararı |
 | gorevler | Görev 1: komut kaynağı arayüzü + senaryo okuyucu (QR sonra aynı yere takılır). Görev 2: kumanda girdisi → sürü komutu | düşük seviye uçuş |
-| ortak | Ayar okuma ve doğrulama, log kurulumu | başka hiçbir şey |
+| ortak | Ayar okuma ve doğrulama, log kurulumu, konum CSV kaydı | başka hiçbir şey |
+| analiz | Kayıtlardan prova raporu (en küçük mesafe, irtifa, slot hatası, iniş doğruluğu) | uçuş kararı, MAVSDK |
 
 Katman kuralı: alttakiler üsttekileri çağırmaz. Sıra: dron, ag → guvenlik, suru, gorus → gorevler.
 
@@ -24,4 +25,4 @@ Katman kuralı: alttakiler üsttekileri çağırmaz. Sıra: dron, ag → guvenli
 - **test/**: `birim` = PX4 gerektirmeyen saf hesap testleri; `simulasyon` = Gazebo'da tam prova. Sahte PX4 veya sahte dron yok.
 - **betikler/**: tek komutla çalışan yardımcılar (SITL'leri başlat, dron programlarını başlat, testleri çalıştır). Mantık içermez, yalnız çağırır.
 - **kayitlar/**: uçuş logları, kod sürümü ve ayar özeti. Git'e girmez.
-- **notlar/**: açık sorular, kararlar, bu harita.
+- **notlar/**: açık sorular, kararlar, bu harita, `rapor_ozgunlukler.md` (TEKNOFEST raporu için özgün çözümler ve ölçümler; yeni çözüm eklenince güncellenir).

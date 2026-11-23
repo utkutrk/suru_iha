@@ -77,6 +77,11 @@ class MavsdkDron:
     def offboard_aktif(self) -> bool:
         return self._offboard_aktif
 
+    @property
+    def hedef_ortak_ned(self) -> np.ndarray:
+        """PX4'e şu an gönderilen (güvenlik kapısından geçmiş) ortak NED hedefinin kopyası."""
+        return self._hedef_ortak_ned.copy()
+
     def telemetri_al(self) -> DronTelemetri:
         """Ortak NED koordinat çerçevesindeki anlık telemetriyi döndürür."""
         ortak_konum = self._yerel_konum_ned + self._yerel_orijin_ofset_ned

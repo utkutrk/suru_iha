@@ -168,5 +168,95 @@
     "birim": "m/s",
     "aciklama": "İniş tamamlandı kontrolü için düşey hız eşiği",
     "kaynak": "[Y]"
+  },
+  "katilim_yaklasma_yuksekligi_m": {
+    "deger": 4.0,
+    "birim": "m",
+    "aciklama": "Ayrılan dron sürüye geri katılırken slotunun bu kadar üstünden yatayda yaklaşır, slotunun üstüne gelince alçalıp oturur; formasyonun içinden geçerken dikey ayrım sağlar (carpismadan_kacinma_mesafesi_m'den büyük olmalı)",
+    "kaynak": "[Y]"
+  },
+  "slot_atama_acik": {
+    "deger": true,
+    "birim": "açık/kapalı",
+    "aciklama": "Kalkıştan önce dron->slot eşlemesi dronların yerdeki konumuna göre toplam yolu en kısa yapacak biçimde yapılır; kapalıysa slot = İHA numarası",
+    "kaynak": "[Y]"
+  },
+  "slot_atama_konum_yuvarlama_m": {
+    "deger": 0.5,
+    "birim": "m",
+    "aciklama": "Atama hesabında konumlar bu ızgaraya yuvarlanır (dronların GPS'indeki küçük fark kararı değiştirmesin)",
+    "kaynak": "[Y]"
+  },
+  "slot_atama_kimlik_tercihi_m": {
+    "deger": 0.05,
+    "birim": "m",
+    "aciklama": "Numara = slot eşleşmesi bu kadar bedava sayılır; eşitlikte veya çok küçük kazançta numara korunur",
+    "kaynak": "[Y]"
+  },
+  "slot_atama_uzlasma_zaman_asimi_s": {
+    "deger": 2.0,
+    "birim": "s",
+    "aciklama": "Dronların aynı atamayı hesapladığını doğrulamak için komşu önerilerini bekleme süresi; dolarsa slot = numara",
+    "kaynak": "[Y]"
+  },
+  "rotasyon_adim_deg": {
+    "deger": 15.0,
+    "birim": "derece",
+    "aciklama": "Formasyon rotasyonu bu kadarlık yaw adımlarıyla yapılır; slotlar yay üzerinde döner, komşu slotların yolları kesişmez",
+    "kaynak": "[Y]"
+  },
+  "rotasyon_ara_konum_toleransi_m": {
+    "deger": 1.5,
+    "birim": "m",
+    "aciklama": "Rotasyonun ara adımlarında slota varmış sayılma eşiği (son adımda konum_varis_toleransi_m geçerli); dur-kalk hareketini önler",
+    "kaynak": "[Y]"
+  },
+  "rotasyon_ara_yaw_toleransi_deg": {
+    "deger": 20.0,
+    "birim": "derece",
+    "aciklama": "Rotasyonun ara adımlarında yaw varmış sayılma eşiği (son adımda yaw_varis_toleransi_deg geçerli)",
+    "kaynak": "[Y]"
+  },
+  "kritik_log_araligi_s": {
+    "deger": 2.0,
+    "birim": "s",
+    "aciklama": "Aynı komşu için 'Kritik yakınlık' uyarısı en sık bu aralıkla loglanır (20 Hz log şişmesini önler)",
+    "kaynak": "[Y]"
+  },
+  "ayrilma_tamamlama_zaman_asimi_s": {
+    "deger": 120.0,
+    "birim": "s",
+    "aciklama": "Ayrılan dronun renkli alana inip tekrar kalkması için en çok beklenecek süre (görev sonunda sürüye katılım için)",
+    "kaynak": "[Y]"
+  },
+  "konum_kaydi_acik": {
+    "deger": true,
+    "birim": "açık/kapalı",
+    "aciklama": "Her dron kayitlar/ altına konum CSV'si yazar; prova raporu bu dosyalardan üretilir",
+    "kaynak": "[Y]"
+  },
+  "konum_kayit_araligi_s": {
+    "deger": 0.1,
+    "birim": "s",
+    "aciklama": "Konum CSV'sine satır yazma aralığı (10 Hz)",
+    "kaynak": "[Y]"
+  },
+  "rapor_carpisma_mesafesi_m": {
+    "deger": 0.8,
+    "birim": "m",
+    "aciklama": "Prova raporunda iki dron merkezi arası bu mesafenin altı 'çarpışma' sayılır (x500 gövdesi yaklaşık 0.5 m)",
+    "kaynak": "[Y]"
+  },
+  "rapor_eslestirme_penceresi_s": {
+    "deger": 0.15,
+    "birim": "s",
+    "aciklama": "Prova raporunda iki dronun CSV satırları bu zaman farkı içinde aynı an sayılır (konum_kayit_araligi_s'den biraz büyük)",
+    "kaynak": "[Y]"
+  },
+  "rapor_irtifa_toleransi_m": {
+    "deger": 0.3,
+    "birim": "m",
+    "aciklama": "Prova raporunda irtifa ölçüm gürültüsü payı: min_irtifa_m - bu değerin altı ihlal sayılır",
+    "kaynak": "[Y]"
   }
 }

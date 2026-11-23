@@ -9,6 +9,8 @@ Gazebo dünyasını ve 3 adet PX4 SITL dronunu başlatır:
 ```bash
 PX4_DIR=~/PX4-Autopilot ./betikler/sitl_baslat.sh 3
 ```
+*(Hakemlerin dronları karışık dizmesini denemek için: `SPAWN_SIRASI=2,3,1 PX4_DIR=~/PX4-Autopilot ./betikler/sitl_baslat.sh 3` — İHA-1, saha.json'daki 2. noktada, İHA-2 3.'de, İHA-3 1.'de doğar. Verilmezse her dron kendi numaralı noktada doğar.)*
+
 *(Gazebo açılınca kamera bir drona kilitlenirse serbest bırakmak için:)*
 ```bash
 gz topic -t /gui/follow -m gz.msgs.StringMsg -p 'data: ""'
@@ -65,3 +67,13 @@ Klavye tuşları:
 ```bash
 ./betikler/test_calistir.sh
 ```
+
+---
+
+## 6. Prova Raporu (uçuş bittikten sonra)
+Son provanın konum CSV'lerinden ve loglarından en küçük mesafe, en düşük irtifa, slot hatası ve renkli alana iniş doğruluğunu hesaplar:
+```bash
+./venv/bin/python betikler/prova_raporu.py
+```
+- Belirli bir provayı seçmek için: `--oturum 20261123_1137` (dosya adındaki zaman damgası öneki).
+- Çıkış kodu 0 = temiz, 1 = temiz değil.

@@ -64,3 +64,18 @@ def test_gps_tutarlilik_sapmada_uyari_verir() -> None:
         beklenen_mesafeler={2: 5.0},
     )
     assert len(uyarilar) == 1
+
+
+def test_kritik_yakinlik_logu_sinirlanir(caplog) -> None:
+    """Aynı komşu için 'Kritik yakınlık' uyarısı her döngüde değil, aralıkla yazılır."""
+    kapi = _kapi_kur()
+    mevcut = np.array([0.0, 0.0, -15.0])
+    kapi.sifirla(mevcut, 0.0)
+    with caplog.at_level(logging.WARNING, logger="test.guvenlik"):
+        for _ in range(50):
+            kapi.hedefi_suz(
+                ham_hedef_ned=mevcut, ham_yaw_deg=0.0, mevcut_ned=mevcut,
+                komsu_konumlari={2: np.array([1.0, 0.0, -15.0])}, dt_s=0.05,
+            )
+    kritikler = [k for k in caplog.records if "Kritik yakınlık" in k.getMessage()]
+    assert len(kritikler) == 1

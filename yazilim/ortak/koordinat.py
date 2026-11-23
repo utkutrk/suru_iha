@@ -19,6 +19,41 @@ def en_kisa_aci_farki_deg(hedef_deg: float, mevcut_deg: float) -> float:
     return aci_normalize_deg(hedef_deg - mevcut_deg)
 
 
+def yaw_ara_adimlari(mevcut_deg: float, hedef_deg: float, adim_deg: float) -> list[float]:
+    """mevcut_deg -> hedef_deg dönüşünü en kısa yönden adim_deg'lik yaw değerlerine böler.
+
+    Neden: formasyon tek hamlede döndürülürse slotlar düz çizgiyle yer değiştirir ve komşu
+    slotların yolları kesişir. Küçük yaw adımlarıyla slotlar yay üzerinde kalır.
+    Dönen liste her zaman tam hedef açıyla biter; fark sıfırsa yalnız [hedef] döner.
+    """
+    if adim_deg <= 0:
+        raise ValueError("adim_deg pozitif olmalıdır")
+    fark = en_kisa_aci_farki_deg(hedef_deg, mevcut_deg)
+    adim_sayisi = max(1, math.ceil(abs(fark) / adim_deg - 1e-9))
+    return [
+        aci_normalize_deg(mevcut_deg + fark * (k / adim_sayisi))
+        for k in range(1, adim_sayisi + 1)
+    ]
+
+
+def yukaridan_yaklasma_noktalari(
+    mevcut_ned: np.ndarray, hedef_ned: np.ndarray, yukseklik_m: float
+) -> list[np.ndarray]:
+    """Hedefe formasyonun üstünden yaklaşmak için ara noktaları verir: önce yerinde yüksel, sonra hedefin üstüne git.
+
+    Üçüncü adım (hedefe alçalma) çağıranın normal hedef hareketidir, listede yoktur.
+    NED'de yukarı = z azalır; dron zaten daha yüksekteyse alçalmaz.
+    """
+    if yukseklik_m <= 0:
+        raise ValueError("yukseklik_m pozitif olmalıdır")
+    mevcut = np.asarray(mevcut_ned, dtype=float)
+    hedef = np.asarray(hedef_ned, dtype=float)
+    ust_z = min(float(hedef[2]) - yukseklik_m, float(mevcut[2]))
+    yerinde_yuksel = np.array([mevcut[0], mevcut[1], ust_z], dtype=float)
+    hedefin_ustu = np.array([hedef[0], hedef[1], float(hedef[2]) - yukseklik_m], dtype=float)
+    return [yerinde_yuksel, hedefin_ustu]
+
+
 def gps_to_ned(
     enlem_deg: float,
     boylam_deg: float,

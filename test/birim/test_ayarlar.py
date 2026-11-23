@@ -52,3 +52,20 @@ def test_kamera_fov_90_ustunde_reddedilir(tmp_path: Path) -> None:
 
     with pytest.raises(AyarHatasi, match="FOV"):
         ayarlari_yukle(ayarlar_dizini=ayar_dizini, takim_anahtari_gecersiz_kilsin="test")
+
+
+def test_yaklasma_yuksekligi_kacinma_mesafesinden_kucukse_reddedilir(tmp_path: Path) -> None:
+    ayarlar = ayarlari_yukle(takim_anahtari_gecersiz_kilsin="test_anahtar")
+    ayar_dizini = tmp_path / "ayarlar"
+    ayar_dizini.mkdir()
+    bozuk_ucus = {**ayarlar.ucus, "katilim_yaklasma_yuksekligi_m": 1.0}
+    for ad, veri in (
+        ("sartname.json", ayarlar.sartname),
+        ("ucus.json", bozuk_ucus),
+        ("ag.json", ayarlar.ag),
+        ("saha.json", ayarlar.saha),
+    ):
+        (ayar_dizini / ad).write_text(json.dumps({k: {"deger": v} for k, v in veri.items()}), encoding="utf-8")
+
+    with pytest.raises(AyarHatasi, match="katilim_yaklasma_yuksekligi_m"):
+        ayarlari_yukle(ayarlar_dizini=ayar_dizini, takim_anahtari_gecersiz_kilsin="test")

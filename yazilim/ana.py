@@ -17,6 +17,7 @@ from yazilim.gorevler.komut_kaynagi import SenaryoKomutKaynagi
 from yazilim.gorus.kamera import BosKamera, OpenCvKamera
 from yazilim.guvenlik.son_kapi import GuvenlikKapisi
 from yazilim.ortak.ayarlar import PROJE_KOKU, ayarlari_yukle
+from yazilim.ortak.konum_kaydi import KonumKaydi
 from yazilim.ortak.loglama import loglama_kur
 from yazilim.suru.senkron import DagitimSenkron
 
@@ -92,6 +93,16 @@ async def _calistir(args: argparse.Namespace) -> None:
         else BosKamera()
     )
 
+    konum_kaydi = (
+        KonumKaydi(
+            args.iha_id,
+            PROJE_KOKU / "kayitlar",
+            float(ayarlar.ucus["konum_kayit_araligi_s"]),
+        )
+        if bool(ayarlar.ucus["konum_kaydi_acik"])
+        else None
+    )
+
     await tasiyici.baslat()
     await dron.baglan()
 
@@ -114,6 +125,7 @@ async def _calistir(args: argparse.Namespace) -> None:
                 kamera=kamera,
                 logger=logger.getChild("gorev1"),
                 hemen_basla=args.hemen_basla,
+                konum_kaydi=konum_kaydi,
             )
             await gorev.calistir()
         else:
@@ -126,9 +138,12 @@ async def _calistir(args: argparse.Namespace) -> None:
                 guvenlik=guvenlik,
                 senkron=senkron,
                 logger=logger.getChild("gorev2"),
+                konum_kaydi=konum_kaydi,
             )
             await gorev2.calistir()
     finally:
+        if konum_kaydi is not None:
+            konum_kaydi.kapat()
         kamera.kapat()
         await dron.kapat()
         await tasiyici.kapat()

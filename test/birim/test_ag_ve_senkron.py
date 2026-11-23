@@ -69,3 +69,60 @@ def test_senkron_ayrilan_komsuyu_beklemez() -> None:
         3, {"konum_ned": [5, 0, -15], "adim": 2, "adim_bitti": True, "ayrilmis": False}, simdi=20.0
     )
     assert senkron.herkes_adimi_bitirdi_mi(simdi=20.1) is True
+
+
+def test_aktif_komsular_adimi_bitirdi_mi_ayrilmis_komsuyu_beklemez() -> None:
+    """Ayrık dron uçuşsuz adım atarken komşuların adımı bitirmesini izler; ayrılmış komşuyu beklemez."""
+    senkron = DagitimSenkron(kendi_id=2, tum_iha_idleri=[1, 2, 3], komsu_zaman_asimi_s=2.0)
+    senkron.komsu_guncelle(
+        1, {"konum_ned": [0, 0, -15], "adim": 5, "adim_bitti": False, "ayrilmis": False}, simdi=10.0
+    )
+    senkron.komsu_guncelle(
+        3, {"konum_ned": [5, 0, -15], "adim": 6, "adim_bitti": False, "ayrilmis": False}, simdi=10.0
+    )
+    # İHA-1 5. adımı henüz bitirmedi
+    assert senkron.aktif_komsular_adimi_bitirdi_mi(5, simdi=10.1) is False
+    # İHA-1 bitirdi; İHA-3 zaten 6. adıma geçmiş (5'i bitirmiş sayılır)
+    senkron.komsu_guncelle(
+        1, {"konum_ned": [0, 0, -15], "adim": 5, "adim_bitti": True, "ayrilmis": False}, simdi=10.2
+    )
+    assert senkron.aktif_komsular_adimi_bitirdi_mi(5, simdi=10.3) is True
+    # Geride kalan komşu varsa beklenir (adım sayacı kayması böyle sürüyü bekletmişti)
+    senkron.komsu_guncelle(
+        3, {"konum_ned": [5, 0, -15], "adim": 4, "adim_bitti": True, "ayrilmis": False}, simdi=10.4
+    )
+    assert senkron.aktif_komsular_adimi_bitirdi_mi(5, simdi=10.5) is False
+    # Ayrılmış komşu beklenmez
+    senkron.komsu_guncelle(
+        3, {"konum_ned": [5, 0, -15], "adim": 4, "adim_bitti": False, "ayrilmis": True}, simdi=10.6
+    )
+    assert senkron.aktif_komsular_adimi_bitirdi_mi(5, simdi=10.7) is True
+
+
+def test_katilim_adiminda_ayrilmis_komsu_beklenir() -> None:
+    """Katılım adımında ayrılmış komşu da adımı bitirene kadar beklenir; susarsa canlı listeden düşer."""
+    senkron = DagitimSenkron(kendi_id=1, tum_iha_idleri=[1, 2, 3], komsu_zaman_asimi_s=2.0)
+    senkron.yeni_adima_gec(7)
+    senkron.kendi_adimini_bitir()
+    senkron.komsu_guncelle(
+        3, {"konum_ned": [5, 0, -15], "adim": 7, "adim_bitti": True, "ayrilmis": False}, simdi=10.0
+    )
+    # İHA-2 ayrılmış ve hâlâ 6. adımda (uçuşunu bitirmeye çalışıyor)
+    senkron.komsu_guncelle(
+        2, {"konum_ned": [40, 0, 0], "adim": 6, "adim_bitti": True, "ayrilmis": True}, simdi=10.0
+    )
+    assert senkron.herkes_adimi_bitirdi_mi(simdi=10.5) is True  # normal adımda ayrılmış beklenmez
+    assert senkron.herkes_adimi_bitirdi_mi(simdi=10.5, ayrilmislari_bekle=True) is False
+    # İHA-2 slotuna oturup 7. adımı bitirdi
+    senkron.komsu_guncelle(
+        2, {"konum_ned": [0, 0, -15], "adim": 7, "adim_bitti": True, "ayrilmis": False}, simdi=11.0
+    )
+    assert senkron.herkes_adimi_bitirdi_mi(simdi=11.1, ayrilmislari_bekle=True) is True
+    # İHA-2 sustu: 2.5 sn sonra canlı listeden düşer, sürü kilitlenmez
+    senkron.komsu_guncelle(
+        3, {"konum_ned": [5, 0, -15], "adim": 7, "adim_bitti": True, "ayrilmis": False}, simdi=15.0
+    )
+    senkron.komsu_guncelle(
+        2, {"konum_ned": [40, 0, 0], "adim": 6, "adim_bitti": True, "ayrilmis": True}, simdi=11.0
+    )
+    assert senkron.herkes_adimi_bitirdi_mi(simdi=15.1, ayrilmislari_bekle=True) is True

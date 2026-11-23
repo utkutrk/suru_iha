@@ -24,24 +24,43 @@ class SanalYapi:
     pitch_deg: float = 0.0
     roll_deg: float = 0.0
     ayrilan_idleri: set[int] = field(default_factory=set)
+    # İHA numarası -> slot numarası. Boşsa numara = slot (varsayılan). Karışık dizilimde slot_atama.py doldurur.
+    slot_atamasi: dict[int, int] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         self.merkez_ned = np.asarray(self.merkez_ned, dtype=float).copy()
         self.formasyon_adi = kanonik_formasyon_adi(self.formasyon_adi)
         self.yaw_deg = aci_normalize_deg(self.yaw_deg)
 
-    def slot_ofseti_govde(self, iha_id: int) -> np.ndarray:
-        """İHA ID'sine (1..N) karşılık gelen gövde çerçevesi ofsetini döndürür."""
+    def atama_ayarla(self, atama: dict[int, int]) -> None:
+        """İHA -> slot eşlemesini ayarlar; 1..N için bire bir olmalıdır."""
+        aralik = set(range(1, self.toplam_iha + 1))
+        if set(atama) != aralik or set(atama.values()) != aralik:
+            raise ValueError(f"Slot ataması 1..{self.toplam_iha} için bire bir olmalıdır: {atama}")
+        self.slot_atamasi = dict(atama)
+
+    def slot_no(self, iha_id: int) -> int:
+        """İHA'nın slot numarasını döndürür (atama yoksa kendi numarası)."""
         if not (1 <= iha_id <= self.toplam_iha):
             raise ValueError(f"Geçersiz İHA ID: {iha_id} (1..{self.toplam_iha})")
+        return self.slot_atamasi.get(iha_id, iha_id)
+
+    def slot_ofseti_govde(self, iha_id: int) -> np.ndarray:
+        """İHA'nın slotuna karşılık gelen gövde çerçevesi ofsetini döndürür."""
+        return self._ofset_slot_no(self.slot_no(iha_id))
+
+    def _ofset_slot_no(self, slot_no: int) -> np.ndarray:
         ofsetler = formasyon_ofsetleri(self.formasyon_adi, self.toplam_iha, self.aralik_m)
-        return ofsetler[iha_id - 1]
+        return ofsetler[slot_no - 1]
+
+    def slot_no_hedefi_ned(self, slot_no: int) -> np.ndarray:
+        """Slot numarasının (dron numarasından bağımsız) ortak NED hedefini hesaplar."""
+        rot = donus_matrisi_ned(self.yaw_deg, self.pitch_deg, self.roll_deg)
+        return self.merkez_ned + (rot @ self._ofset_slot_no(slot_no))
 
     def slot_hedefi_ned(self, iha_id: int) -> np.ndarray:
         """Verilen İHA'nın ortak NED çerçevesindeki 3B slot hedefini hesaplar."""
-        ofset = self.slot_ofseti_govde(iha_id)
-        rot = donus_matrisi_ned(self.yaw_deg, self.pitch_deg, self.roll_deg)
-        return self.merkez_ned + (rot @ ofset)
+        return self.slot_no_hedefi_ned(self.slot_no(iha_id))
 
     def tum_slot_hedefleri_ned(self) -> dict[int, np.ndarray]:
         """Tüm slotlar (1..N) için ortak NED hedeflerini döndürür."""

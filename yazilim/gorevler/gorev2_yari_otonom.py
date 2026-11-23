@@ -13,10 +13,12 @@ from yazilim.ag.udp_tasiyici import Tasiyici
 from yazilim.dron.mavsdk_dron import MavsdkDron
 from yazilim.guvenlik.son_kapi import GuvenlikKapisi
 from yazilim.ortak.ayarlar import Ayarlar
+from yazilim.ortak.konum_kaydi import FAZ_INIS, FAZ_KALKIS, FAZ_UCUS, FAZ_YERDE, KonumKaydi
 from yazilim.ortak.koordinat import aci_normalize_deg
 from yazilim.suru.formasyonlar import kanonik_formasyon_adi
 from yazilim.suru.sanal_yapi import SanalYapi
 from yazilim.suru.senkron import DagitimSenkron
+from yazilim.suru.slot_atama import SlotAtamaUzlasmasi
 
 
 class Gorev2YariOtonom:
@@ -32,7 +34,10 @@ class Gorev2YariOtonom:
         guvenlik: GuvenlikKapisi,
         senkron: DagitimSenkron,
         logger: logging.Logger,
+        konum_kaydi: KonumKaydi | None = None,
     ) -> None:
+        self._konum_kaydi = konum_kaydi
+        self._faz = FAZ_YERDE
         self._iha_id = iha_id
         self._ayarlar = ayarlar
         self._dron = dron
@@ -48,6 +53,16 @@ class Gorev2YariOtonom:
             merkez_ned=np.array([home[0], home[1], -kalkis_irtifa], dtype=float),
             formasyon_adi=str(ayarlar.ucus["varsayilan_formasyon"]),
             aralik_m=float(ayarlar.ucus["varsayilan_aralik_m"]),
+        )
+
+        self._toplam_iha = toplam_iha
+        self._atama_uzlasmasi = SlotAtamaUzlasmasi(
+            iha_id=iha_id,
+            toplam_iha=toplam_iha,
+            tasiyici=tasiyici,
+            logger=logger,
+            yayin_araligi_s=float(ayarlar.ucus["durum_yayin_araligi_s"]),
+            zaman_asimi_s=float(ayarlar.ucus["slot_atama_uzlasma_zaman_asimi_s"]),
         )
 
         self._mod = "hareket"  # "hareket" (Sürü Hareket Modu) veya "manevra" (Manevra Modu)
@@ -106,10 +121,25 @@ class Gorev2YariOtonom:
             self._logger.info("Görev 2 hazır. Kumandadan 'kalkis' komutu bekleniyor...")
             await self._kalkis_istendi.wait()
 
+            # Karışık dizilimde dronlar yerdeki konumlarına en uygun slota atanır (kalkıştan önce)
+            if bool(self._ayarlar.ucus["slot_atama_acik"]):
+                konumlar = {self._iha_id: self._dron.telemetri_al().konum_ned, **self._senkron.komsu_konumlari()}
+                slotlar = {n: self._yapi.slot_no_hedefi_ned(n) for n in range(1, self._toplam_iha + 1)}
+                self._yapi.atama_ayarla(
+                    await self._atama_uzlasmasi.belirle(
+                        konumlar,
+                        slotlar,
+                        float(self._ayarlar.ucus["slot_atama_konum_yuvarlama_m"]),
+                        float(self._ayarlar.ucus["slot_atama_kimlik_tercihi_m"]),
+                    )
+                )
+                self._logger.info("Bu dronun slotu: %d", self._yapi.slot_no(self._iha_id))
+
             tel = self._dron.telemetri_al()
             self._guvenlik.sifirla(tel.konum_ned, tel.yaw_deg)
             self._dron.hedef_guncelle(tel.konum_ned, tel.yaw_deg)
             await self._dron.arm_ve_offboard_baslat()
+            self._faz = FAZ_KALKIS
 
             # İlk kalkış (10 m tabanına ulaşana kadar)
             aralik = 1.0 / float(self._ayarlar.ucus["setpoint_frekansi_hz"])
@@ -127,6 +157,7 @@ class Gorev2YariOtonom:
                 tel = self._dron.telemetri_al()
                 if -tel.konum_ned[2] >= min_irtifa:
                     taban_ulasildi = True
+                    self._faz = FAZ_UCUS
 
                 # Kumanda paketi kesilirse çubuk girdilerini sıfırla (havada sabit kal)
                 if (time.monotonic() - self._son_kumanda_s) > kumanda_zaman_asimi:
@@ -175,7 +206,9 @@ class Gorev2YariOtonom:
                 await asyncio.sleep(aralik)
 
             self._logger.info("Kumandadan iniş komutu alındı; güvenli iniş başlıyor...")
+            self._faz = FAZ_INIS
             await self._dron.inis_yap_ve_bekle()
+            self._faz = FAZ_YERDE
             self._logger.info("Görev 2 başarıyla tamamlandı.")
         finally:
             self._calisiyor = False
@@ -188,4 +221,9 @@ class Gorev2YariOtonom:
             tel = self._dron.telemetri_al()
             paket = self._senkron.durum_paketi_olustur(tel.konum_ned, tel.gps_saglikli)
             self._tasiyici.yayinla("DURUM", paket)
+            if self._konum_kaydi is not None:
+                self._konum_kaydi.yaz(
+                    tel, self._dron.hedef_ortak_ned, self._yapi.slot_hedefi_ned(self._iha_id),
+                    0, self._faz, f"mod={self._mod}",
+                )
             await asyncio.sleep(aralik)

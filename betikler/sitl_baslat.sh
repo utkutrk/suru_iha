@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Gazebo Harmonic + N adet PX4 SITL (x500) dronunu tek komutla başlatır.
 # Kullanım: PX4_DIR=/yol/PX4-Autopilot ./betikler/sitl_baslat.sh [iha_sayisi]
+# Karışık dizilim denemesi (hakemler dronları karışık dizer [5.1]): SPAWN_SIRASI=2,3,1 verilirse
+# İHA-1 saha.json'daki 2. başlangıç noktasında, İHA-2 3.'de, İHA-3 1.'de doğar. Verilmezse İHA-i, i. noktada doğar.
 
 set -euo pipefail
 
@@ -8,6 +10,7 @@ PROJE_KOKU="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PYTHON="${PROJE_KOKU}/venv/bin/python"
 PX4_DIR="${PX4_DIR:-$HOME/PX4-Autopilot}"
 IHA_SAYISI="${1:-3}"
+SPAWN_SIRASI="${SPAWN_SIRASI:-}"
 DUNYA_YOLU="${PROJE_KOKU}/simulasyon/dunyalar/teknofest_alani.sdf"
 
 if [[ ! -d "${PX4_DIR}" ]]; then
@@ -48,7 +51,11 @@ for ((i = 1; i <= IHA_SAYISI; i++)); do
 import json
 with open('${PROJE_KOKU}/ayarlar/saha.json', encoding='utf-8') as f:
     konumlar = json.load(f)['baslangic_konumlari_ned']['deger']
-kuzey, dogu, _ = konumlar.get('${i}', [0.0, (${i}-1)*4.0, 0.0])
+sira = [int(x) for x in '${SPAWN_SIRASI}'.split(',') if x.strip()]
+if sira and sorted(sira) != list(range(1, ${IHA_SAYISI} + 1)):
+    raise SystemExit('HATA: SPAWN_SIRASI 1..${IHA_SAYISI} sayılarının bir sıralaması olmalı, örn. 2,3,1')
+nokta = sira[${i} - 1] if sira else ${i}
+kuzey, dogu, _ = konumlar.get(str(nokta), [0.0, (nokta - 1) * 4.0, 0.0])
 print(f'{dogu},{kuzey},0.2,0,0,0')
 ")"
 

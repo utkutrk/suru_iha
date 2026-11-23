@@ -108,6 +108,12 @@ def _sartnameyi_dogrula(
     if fov > maks_fov:
         raise AyarHatasi(f"Kamera FOV ({fov}°) şartname sınırı {maks_fov}°'yi aşamaz [5.1]")
 
+    if float(ucus["katilim_yaklasma_yuksekligi_m"]) <= float(ucus["carpismadan_kacinma_mesafesi_m"]):
+        raise AyarHatasi(
+            "katilim_yaklasma_yuksekligi_m, carpismadan_kacinma_mesafesi_m'den büyük olmalıdır "
+            "(yoksa yukarıdan yaklaşma dikey ayrım sağlamaz)"
+        )
+
     if float(ucus["setpoint_frekansi_hz"]) <= 0:
         raise AyarHatasi("setpoint_frekansi_hz pozitif olmalıdır")
 

@@ -122,19 +122,28 @@ class DagitimSenkron:
         """Kendisi + canlı komşuların toplam sayısı (Tablo 7 minimum İHA takibi için)."""
         return 1 + len(self.canli_komsular(simdi))
 
-    def herkes_adimi_bitirdi_mi(self, simdi: float | None = None) -> bool:
-        """Aktif (canlı ve ayrılmamış) tüm komşular mevcut adımı bitirdiyse True döner.
+    def aktif_komsular_adimi_bitirdi_mi(
+        self, adim: int, simdi: float | None = None, ayrilmislari_bekle: bool = False
+    ) -> bool:
+        """Canlı komşuların tümü verilen adımı bitirdiyse True döner.
 
-        Susan/düşen komşu canlı listeden düştüğü için sürüyü asla kilitlemez.
+        Komşu ya o adımı bitirmiş ya da sonraki adıma geçmiş olmalı. Susan/düşen komşu canlı
+        listeden düştüğü için sürüyü asla kilitlemez. Ayrılmış komşu normalde beklenmez;
+        ayrilmislari_bekle=True ise (katılım adımı) o da adımı bitirene kadar beklenir.
         """
-        if not self._kendi_adim_bitti:
-            return False
         for durum in self.canli_komsular(simdi).values():
-            if durum.ayrilmis:
+            if durum.ayrilmis and not ayrilmislari_bekle:
                 continue
-            # Komşu ya mevcut adımı bitirmiş ya da bir sonraki adıma geçmiş olmalı
-            if durum.adim < self._mevcut_adim:
+            if durum.adim < adim:
                 return False
-            if durum.adim == self._mevcut_adim and not durum.adim_bitti:
+            if durum.adim == adim and not durum.adim_bitti:
                 return False
         return True
+
+    def herkes_adimi_bitirdi_mi(
+        self, simdi: float | None = None, ayrilmislari_bekle: bool = False
+    ) -> bool:
+        """Kendimiz ve aktif tüm komşular mevcut adımı bitirdiyse True döner."""
+        if not self._kendi_adim_bitti:
+            return False
+        return self.aktif_komsular_adimi_bitirdi_mi(self._mevcut_adim, simdi, ayrilmislari_bekle)
